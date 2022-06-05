@@ -4,7 +4,7 @@ using std::string;
 using std::to_string;
 
 
-Account::Account() : balance(0)
+Account::Account() : balance(0), limit(100)
 {
 }
 
@@ -28,6 +28,8 @@ bool Account::Deposit(int amount)
     {
         balance += amount;
         log.push_back(Transaction(amount, "Deposit"));
+        balance -= 1;
+        log.push_back(Transaction(1, "service Charge"));
         return true;
     }
     else
@@ -43,10 +45,12 @@ bool Account::Withdraw(int amount)
         return false;
     }
 
-    if (balance >= amount)
+    if ((balance + limit) >= amount)
     {
         balance -= amount;
         log.push_back(Transaction(amount, "Withdraw"));
+        balance -= 1;
+        log.push_back(Transaction(1, "service Charge"));
         return true;
     }
     return false;
